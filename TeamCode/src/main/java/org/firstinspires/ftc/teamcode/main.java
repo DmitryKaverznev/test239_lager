@@ -46,27 +46,36 @@ public class main extends LinearOpMode {
         waitForStart();
 
 
-
         while (opModeIsActive()) {
-            updateEnc();
-            while (motorLeft.getCurrentPosition() < encLeft + getEncWight(30) && motorRight.getCurrentPosition() < encRight + getEncWight(30) && opModeIsActive()) {
+            if (gamepad1.dpad_up) {
+                motorRight.setPower(1);
                 motorLeft.setPower(1);
-                motorRight.setPower(1);
-            }
-
-            motorLeft.setPower(0);
-            motorRight.setPower(0);
-            sleep(1000);
-
-            updateEnc();
-            while (motorRight.getCurrentPosition() < encRight + getEncAngel(90) && motorLeft.getCurrentPosition() > encLeft - getEncAngel(90) && opModeIsActive()) {
+            } else if (gamepad1.dpad_down) {
+                motorRight.setPower(-1);
                 motorLeft.setPower(-1);
+            } else if (gamepad1.dpad_left) {
+                motorLeft.setPower(1);
+                motorRight.setPower(-1);
+            } else if (gamepad1.dpad_right) {
                 motorRight.setPower(1);
+                motorLeft.setPower(-1);
+            } else if (Math.abs(gamepad1.left_stick_y)>0.1) {
+                double power = Math.abs(gamepad1.left_stick_y) * gamepad1.left_stick_y * -1;
+
+                motorRight.setPower(power);
+                motorLeft.setPower(power);
             }
+            else if (Math.abs(gamepad1.right_stick_x)>0.1) {
+                double power = Math.abs(gamepad1.right_stick_x) * gamepad1.right_stick_x;
 
-
+                motorRight.setPower(power);
+                motorLeft.setPower(-power);
+            }
+            else {
+                motorLeft.setPower(0);
+                motorRight.setPower(0);
+            }
         }
-        motorLeft.setPower(0);
-        motorRight.setPower(0);
+
     }
 }
